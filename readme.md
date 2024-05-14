@@ -1,0 +1,1 @@
+i'm gonna use this for individual projects, idk how else this should work imo
