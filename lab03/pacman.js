@@ -55,7 +55,20 @@ function moveRight(game){
 var game = createGame(10);
 document.getElementById("test").innerHTML = game;
 
+/*
+document.onkeydown = function(){
+    console.log("fuck");
+    if (KeyboardEvent.keyCode == 39){
+        moveRight(game);
+    } else if (KeyboardEvent.keyCode == 37){
+        moveLeft(game);
+    }
+};*/
 
-document.onclick = function(){moveLeft(game)};
-
-
+document.addEventListener('keydown', function (e) {
+    if (e.key == "ArrowRight"){
+        moveRight(game);
+    } else if (e.key == "ArrowLeft"){
+        moveLeft(game);
+    }
+  }, false);
