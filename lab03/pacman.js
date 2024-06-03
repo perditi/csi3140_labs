@@ -11,6 +11,7 @@ var fruitTimer = 0;
 
 var gameActive = false;
 var game;
+var ghostAlive;
 var pellets;
 
 function createGame(n, cont){
@@ -42,6 +43,7 @@ function createGame(n, cont){
         ghost = Math.floor(Math.random() * (n));
     } while (ghost == pacman || ghost == fruit);
     game[ghost] = "^";
+    ghostAlive = true;
 
     for (var i = 0, len = game.length; i < len; i++){
         if (game[i] == null){
@@ -88,6 +90,7 @@ function processMove(){
         if (fruitTimer > 0){
             console.log("has fruit, monching ghost");
             game[pacman] = "C";
+            ghostAlive = false;
             addScore(300);
         } else {
             gameActive = false;
@@ -233,7 +236,7 @@ document.addEventListener('keydown', function (e) {
   }, false);
 
 setInterval(() => {
-    if (gameActive){
+    if (gameActive && ghostAlive){
         var dir = Math.floor(Math.random() * (2));
         ghostMove(dir);
     }
@@ -242,6 +245,9 @@ setInterval(() => {
 setInterval(() => {
     if (gameActive && fruitTimer > 0){
         fruitTimer = fruitTimer - 1;
-        display(game);
+        console.log("fruit timer go down");
+        if (fruitTimer == 0){
+            display(game);
+        }
     }
 }, 1000);
