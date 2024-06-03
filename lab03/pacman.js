@@ -135,15 +135,20 @@ function updateGame(){
             console.log("updating hiscore");
             document.getElementById("hiscore").innerHTML = "High Score: " + high_score;
         }
-        sleep(3000);
-        document.getElementById("gamelose").innerHTML = "";
-        createGame(10, false);
-        displayScore();
+        setTimeout(() => {
+            document.getElementById("gamelose").innerHTML = "";
+            createGame(10, false);
+            displayScore();
+            display(game);
+        }, 3000);
+        
+    } else if (gameActive == true){
+        if (pellets[pellets.length-1] == 0){
+            createGame(10, true);
+            
+        }
+        display(game);
     }
-    if (pellets[pellets.length-1] == 0){
-        createGame(10, true);
-    }
-    display(game);
 }
 
 function display(g){
