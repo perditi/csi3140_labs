@@ -1,3 +1,5 @@
+var gameSize = 10;
+
 var pacman;
 var fruit;
 var ghost;
@@ -84,6 +86,7 @@ function processMove(){
     if (pacman == ghost){
         console.log("ghost detected");
         if (fruitTimer > 0){
+            console.log("has fruit, monching ghost");
             game[pacman] = "C";
             addScore(300);
         } else {
@@ -105,7 +108,7 @@ function processMove(){
             fruit = null;
             game[pacman] = "C";
             addScore(200);
-            fruitTimer = 15;
+            fruitTimer = 7;
         }
     }
 
@@ -113,7 +116,7 @@ function processMove(){
 }
 
 function addScore(n){
-    console.log("adding score");
+    console.log("adding " + n + " score");
     score += n;
     displayScore();
 }
@@ -137,15 +140,16 @@ function updateGame(){
         }
         setTimeout(() => {
             document.getElementById("gamelose").innerHTML = "";
-            createGame(10, false);
+            createGame(gameSize, false);
             displayScore();
             display(game);
         }, 3000);
         
     } else if (gameActive == true){
         if (pellets[pellets.length-1] == 0){
-            createGame(10, true);
-            
+            console.log("no pellets left, new game starting");
+            addScore(500);
+            createGame(gameSize, true);
         }
         display(game);
     }
@@ -179,10 +183,39 @@ function sleep(milliseconds) {
     }
 }
 
-createGame(10, false)
-updateGame();
-display(game);
+function ghostMove(n){//input is 0 or 1
+    if (pellets[ghost] == 1){
+        game[ghost] = "."
+    } else if (fruit == ghost){
+        game[ghost] = "@";
+    } else {
+        game[ghost] = "_";
+    }
+    if (n == 0){
+        console.log("ghost move left");
+        if (ghost == 0){
+            ghost = game.length-1;
+        } else {
+            ghost = ghost - 1;
+        }
+    } else if (n == 1){
+        console.log("ghost move right");
+        if (ghost == game.length-1){
+            ghost = 0;
+        } else {
+            ghost = ghost + 1;
+        }
+    } else {
+        console.log("this literaly shouldn't happen");
+    }
 
+    game[ghost] = "^";
+
+    processMove();
+}
+
+createGame(gameSize, false)
+updateGame();
 
 document.addEventListener('keydown', function (e) {
     if (gameActive){
@@ -198,3 +231,17 @@ document.addEventListener('keydown', function (e) {
         console.log("pacman in " + pacman);
     }
   }, false);
+
+setInterval(() => {
+    if (gameActive){
+        var dir = Math.floor(Math.random() * (2));
+        ghostMove(dir);
+    }
+}, 2000);
+
+setInterval(() => {
+    if (gameActive && fruitTimer > 0){
+        fruitTimer = fruitTimer - 1;
+        display(game);
+    }
+}, 1000);
